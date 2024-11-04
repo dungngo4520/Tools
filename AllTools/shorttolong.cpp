@@ -1,3 +1,4 @@
+#define UMDF_USING_NTSTATUS
 #include <Windows.h>
 #include <ntstatus.h>
 #include <iostream>

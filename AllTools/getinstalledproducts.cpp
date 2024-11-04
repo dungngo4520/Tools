@@ -1,5 +1,4 @@
 #include < Windows.h>
-#include <ntstatus.h>
 #include <iostream>
 #include <iomanip>
 #include <string>
