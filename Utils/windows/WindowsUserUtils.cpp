@@ -21,6 +21,31 @@ bool utils::windows::user::IsElevated()
     return Elevation.TokenIsElevated;
 }
 
+bool utils::windows::user::IsRunningAsAdministrator()
+{
+    BOOL IsRunAsAdmin = FALSE;
+    SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
+    PSID pAdministratorsGroup = NULL;
+
+    if (AllocateAndInitializeSid(
+            &NtAuthority,                 //pIdentifierAuthority
+            2,                            //nSubAuthorityCount
+            SECURITY_BUILTIN_DOMAIN_RID,  //nSubAuthority0
+            DOMAIN_ALIAS_RID_ADMINS,      //nSubAuthority1
+            0,                            //nSubAuthority2
+            0,                            //nSubAuthority3
+            0,                            //nSubAuthority4
+            0,                            //nSubAuthority5
+            0,                            //nSubAuthority6
+            0,                            //nSubAuthority7
+            &pAdministratorsGroup         //pSid
+        )) {
+        CheckTokenMembership(NULL, pAdministratorsGroup, &IsRunAsAdmin);
+        FreeSid(pAdministratorsGroup);
+    }
+    return IsRunAsAdmin == TRUE;
+}
+
 bool utils::windows::user::IsPrivilegeEnabled(const std::wstring& privilegeName)
 {
     HANDLE hToken = NULL;
